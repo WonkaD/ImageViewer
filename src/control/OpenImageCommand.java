@@ -1,18 +1,21 @@
 package control;
 
+import application.Application;
 import javax.swing.JFileChooser;
 
 public class OpenImageCommand implements Command {
 
     private final JFileChooser fileChooser;
+    private final Application application;
 
-    public OpenImageCommand(JFileChooser frame) {
+    public OpenImageCommand(JFileChooser frame, Application application) {
         this.fileChooser = frame;
+        this.application = application;
     }
 
     @Override
     public void execute() {
-        fileChooser.showOpenDialog(fileChooser);
+        if (fileChooser.showOpenDialog(fileChooser));
 
     }
 
