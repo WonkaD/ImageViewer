@@ -36,7 +36,6 @@ public class Application extends JFrame {
     public void setImageFolder(String imageFolder) {
         IMAGE_FOLDER = imageFolder;
         System.out.println(imageFolder);
-        imageDisplay.show(imageIn(imageFolder));
     }
 
     public static void main(String[] args) throws IOException {
@@ -45,21 +44,21 @@ public class Application extends JFrame {
     }
 
     public Application() throws IOException {
-        createCommands();
-        if (IMAGE_FOLDER.equals("#")) createFileChooser();
         deployUI();
+        createCommands();
     }
 
     private void deployUI() throws IOException {
-        this.setTitle("Image Viewer");
+        this.setTitle("JImageViewer");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(new Dimension(500, 500));
         this.setLocationRelativeTo(null);
-        this.getContentPane().add(menuBar(), BorderLayout.NORTH);
-        this.getContentPane().add(imagePanel(imageIn(IMAGE_FOLDER)));
-        this.getContentPane().add(toolbar(), BorderLayout.SOUTH);
         this.setFocusable(true);
         this.addKeyListener(new KeyboardManager());
+        this.getContentPane().add(menuBar(), BorderLayout.NORTH);
+        if (IMAGE_FOLDER.equals("#")) createFileChooser();
+        this.getContentPane().add(imagePanel(imageIn(IMAGE_FOLDER)));
+        this.getContentPane().add(toolbar(), BorderLayout.SOUTH);
 
     }
 
@@ -69,17 +68,10 @@ public class Application extends JFrame {
         fileChooser.setFileFilter(JPG);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            setImageFolder(fileChooser.getSelectedFile().toString());
+            IMAGE_FOLDER = fileChooser.getSelectedFile().toString();
         } else {
             System.exit(ABORT);
         }
-    }
-
-    private void createCommands() {
-        commands.put("next", new NextImageCommand(this.imageDisplay));
-        commands.put("prev", new PrevImageCommand(this.imageDisplay));
-        commands.put("copy", new CopyImageCommand(this.imageDisplay, getToolkit().getSystemClipboard()));
-        commands.put("open", new OpenImageCommand(fileChooser));
     }
     
     private ImagePanel imagePanel(Image image) throws IOException {
@@ -88,6 +80,13 @@ public class Application extends JFrame {
         panel.show(image);
         panel.addMouseListener(new MouseShift());
         return panel;
+    }
+
+    private void createCommands() {
+        commands.put("next", new NextImageCommand(this.imageDisplay));
+        commands.put("prev", new PrevImageCommand(this.imageDisplay));
+        commands.put("copy", new CopyImageCommand(this.imageDisplay, getToolkit().getSystemClipboard()));
+        commands.put("open", new OpenImageCommand(fileChooser));
     }
 
     private Image imageIn(String path) {
@@ -115,7 +114,6 @@ public class Application extends JFrame {
 
     private ActionListener doCommand(String operation) {
         return (ActionEvent e) -> {
-            System.out.println("caca");
             commands.get(operation).execute();
         };
     }
