@@ -15,10 +15,6 @@ public class FileImageReader implements ImageReader {
     }
 
     public FileImageReader(File folder) {
-        System.out.println("new");
-        System.out.println(folder.toString());
-        System.out.println(folder.isDirectory());
-        System.out.println(folder.getParentFile());
         if (folder.isDirectory()) {
             this.files = folder.listFiles(new ImageFileFilter());
         } else if (folder.isFile()){
@@ -27,8 +23,6 @@ public class FileImageReader implements ImageReader {
         if (files.length == 0) {
             this.files = new File[]{new File("C:\\Users\\WonkaD\\Documents\\NetBeansProjects\\ImageViewer\\src\\NoDirectory\\error.jpg")};
         }
-        System.out.println(files.length);
-        System.out.println(files[0].toString());
     }
 
     @Override
